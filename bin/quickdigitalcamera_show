@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# This was slower for some reason
+#mpv av://v4l2:/dev/video0 --profile=low-latency --untimed
+mpv av://v4l2:/dev/video0 --profile=low-latency

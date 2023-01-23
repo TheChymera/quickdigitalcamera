@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+DATE=$(date +"%Y-%m-%dT%H-%M");
+gphoto2 --stdout --capture-sound --capture-movie | ffmpeg -i - -vcodec libx264 -pix_fmt yuv420p -threads 0 "${DATE}_camera.mp4"
