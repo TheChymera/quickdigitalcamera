@@ -5,4 +5,7 @@
 # If that didn't work, you will need torun the following as root:
 #modprobe v4l2loopback exclusive_caps=1 max_buffers=2
 #gphoto2 --set-config /main/imgsettings/iso 25600 --stdout --capture-sound --capture-movie | ffmpeg -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0
+echo "Please make sure to run the following command as root, in order to be able to use this script:"
+echo "\`modprobe v4l2loopback exclusive_caps=1 max_buffers=2\`"
+echo " "
 gphoto2 --stdout --capture-movie | ffmpeg -i - -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0 &>/dev/null & disown
