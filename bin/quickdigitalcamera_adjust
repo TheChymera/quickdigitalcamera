@@ -1,7 +1,51 @@
 #!/usr/bin/env bash
 
+accepted_modes=["bright","dark"]
 
-quickdigitalcamera_stop
+USAGE="Usage:\n\
+	$(basename "$0") [-c] <adjustment-mode>\n\
+        Arguments:
+		adjustment-mode: needs to be one of ${accepted_modes[*]}.
+        Options:
+		-c: Perform camera control (turn off and then on), in order to allow adjusting if `gphoto2` is already running.\n\
+		-h: displays help message."
+
+# reads options:
+while getopts ":ch" flag
+do
+	case "$flag" in
+		c)
+			camera_control=1
+			;;
+		h)
+			echo -e "$USAGE"
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			exit 1
+			;;
+		:)
+			echo "Option -$OPTARG requires an argument." >&2
+			exit 1
+			;;
+	esac
+done
+
+# shifts pointer to read mandatory output file specification
+shift $((OPTIND - 1))
+adjustment_mode="$1"
+
+if [[ ! ${accepted_modes[*]} =~ $(echo "\<$adjustment_mode\>") ]]; then
+	echo "$adjustment_mode"
+	echo "The <adjustment-mode> argument needs to be one of ${accepted_modes[*]}"
+	exit 1
+fi
+
+
+if [ -z "$camera_control" ]; then
+	quickdigitalcamera_stop
+fi
 
 if [ "$1" == "dark" ]; then
 	gphoto2 --set-config /main/capturesettings/shutterspeed=18
@@ -15,4 +59,7 @@ gphoto2 --set-config /main/capturesettings/exposurecompensation=24
 gphoto2 --set-config /main/imgsettings/whitebalance=1
 gphoto2 --set-config /main/capturesettings/moviequality=2
 
-quickdigitalcamera_start
+
+if [ -z "$camera_control" ]; then
+	quickdigitalcamera_start
+fi
