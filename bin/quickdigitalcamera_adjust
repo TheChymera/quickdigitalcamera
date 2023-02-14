@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-accepted_modes=["bright","dark"]
+accepted_modes=["bright","medium","dark"]
 
 USAGE="Usage:\n\
 	$(basename "$0") [-c] <adjustment-mode>\n\
@@ -43,14 +43,17 @@ if [[ ! ${accepted_modes[*]} =~ $(echo "\<$adjustment_mode\>") ]]; then
 fi
 
 
-if [ -z "$camera_control" ]; then
+if [ "$camera_control" ]; then
 	quickdigitalcamera_stop
+	sleep 1
 fi
 
-if [ "$1" == "dark" ]; then
+if [ "$camera_control" == "dark" ]; then
 	gphoto2 --set-config /main/capturesettings/shutterspeed=18
-elif [ "$1" == "bright" ]; then
-	gphoto2 --set-config /main/capturesettings/shutterspeed=8
+elif [ "$camera_control" == "medium" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed=12
+elif [ "$camera_control" == "bright" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed=7
 fi
 
 gphoto2 --set-config /main/capturesettings/focusmode2=1
@@ -60,6 +63,7 @@ gphoto2 --set-config /main/imgsettings/whitebalance=1
 gphoto2 --set-config /main/capturesettings/moviequality=2
 
 
-if [ -z "$camera_control" ]; then
+if [ "$camera_control" ]; then
+	sleep 1
 	quickdigitalcamera_start
 fi
