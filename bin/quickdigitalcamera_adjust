@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+quickdigitalcamera_stop
+
 if [ "$1" == "dark" ]; then
 	gphoto2 --set-config /main/capturesettings/shutterspeed=18
 elif [ "$1" == "bright" ]; then
@@ -11,3 +14,5 @@ gphoto2 --set-config /main/capturesettings/f-number=14
 gphoto2 --set-config /main/capturesettings/exposurecompensation=24
 gphoto2 --set-config /main/imgsettings/whitebalance=1
 gphoto2 --set-config /main/capturesettings/moviequality=2
+
+quickdigitalcamera_start
