@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-gphoto2 --set-config /main/capturesettings/shutterspeed=18
+if [ "$1" == "dark" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed=18
+elif [ "$1" == "bright" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed=8
+fi
+
 gphoto2 --set-config /main/capturesettings/focusmode2=1
 gphoto2 --set-config /main/capturesettings/f-number=14
 gphoto2 --set-config /main/capturesettings/exposurecompensation=24
