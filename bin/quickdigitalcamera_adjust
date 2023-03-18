@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-accepted_modes=["bright","medium","dark"]
+accepted_modes=["bright","medium","dark","night"]
 
 USAGE="Usage:\n\
 	$(basename "$0") [-c] <adjustment-mode>\n\
         Arguments:
 		adjustment-mode: needs to be one of ${accepted_modes[*]}.
         Options:
+		-f: Full adjustment including miscellaneous settings such as ensuring static focus.
 		-c: Perform camera control (turn off and then on), in order to allow adjusting if \`gphoto2\` is already running.\n\
 		-h: displays help message."
 
@@ -14,6 +15,9 @@ USAGE="Usage:\n\
 while getopts ":ch" flag
 do
 	case "$flag" in
+		f)
+			full_adjustment=1
+			;;
 		c)
 			camera_control=1
 			;;
@@ -48,19 +52,40 @@ if [ "$camera_control" ]; then
 	sleep 1
 fi
 
-if [ "$camera_control" == "dark" ]; then
-	gphoto2 --set-config /main/capturesettings/shutterspeed=18
-elif [ "$camera_control" == "medium" ]; then
-	gphoto2 --set-config /main/capturesettings/shutterspeed=10
-elif [ "$camera_control" == "bright" ]; then
-	gphoto2 --set-config /main/capturesettings/shutterspeed=6
+# Index values may be highly specific to Nikon D750
+# String values are general-purpose but may not be available on all cameras.
+if [ "$adjustment_mode" == "night" ]; then
+	#gphoto2 --set-config-index /main/capturesettings/shutterspeed=20
+	gphoto2 --set-config /main/capturesettings/shutterspeed2="1/60"
+	gphoto2 --set-config /main/capturesettings/f-number="f/5.6"
+	gphoto2 --set-config /main/capturesettings/exposurecompensation="3"
+	gphoto2 --set-config /main/imgsettings/iso=10000
+elif [ "$adjustment_mode" == "dark" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed2="1/60"
+	gphoto2 --set-config /main/capturesettings/f-number="f/6.3"
+	gphoto2 --set-config /main/capturesettings/exposurecompensation="3"
+	gphoto2 --set-config /main/imgsettings/iso=8000
+elif [ "$adjustment_mode" == "medium" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed2="1/60"
+	gphoto2 --set-config /main/capturesettings/f-number="f/9"
+	gphoto2 --set-config /main/imgsettings/iso=2500
+elif [ "$adjustment_mode" == "bright" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed2="1/60"
+	gphoto2 --set-config /main/capturesettings/f-number="f/16"
+	gphoto2 --set-config /main/imgsettings/iso=800
 fi
 
-gphoto2 --set-config /main/capturesettings/focusmode2=1
-gphoto2 --set-config /main/capturesettings/f-number=14
-gphoto2 --set-config /main/capturesettings/exposurecompensation=24
-gphoto2 --set-config /main/imgsettings/whitebalance=1
-gphoto2 --set-config /main/capturesettings/moviequality=2
+
+
+if [ "$full_adjustment" ]; then
+	#gphoto2 --set-config /main/imgsettings/autoiso="On"
+	gphoto2 --set-config /main/capturesettings/focusmode2=1
+	gphoto2 --set-config /main/imgsettings/whitebalance=1
+	gphoto2 --set-config /main/capturesettings/moviequality=2
+	# Static focus adjustment:
+	gphoto2 --set-config-index /main/capturesettings/liveviewafmode=1
+	gphoto2 --set-config-index /main/capturesettings/liveviewaffocus=0
+fi
 
 
 if [ "$camera_control" ]; then
