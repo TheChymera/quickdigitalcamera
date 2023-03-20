@@ -72,6 +72,10 @@ elif [ "$adjustment_mode" == "medium" ]; then
 elif [ "$adjustment_mode" == "bright" ]; then
 	gphoto2 --set-config /main/capturesettings/shutterspeed2="1/60"
 	gphoto2 --set-config /main/capturesettings/f-number="f/11"
+	gphoto2 --set-config /main/imgsettings/iso=2000
+elif [ "$adjustment_mode" == "glare" ]; then
+	gphoto2 --set-config /main/capturesettings/shutterspeed2="1/60"
+	gphoto2 --set-config /main/capturesettings/f-number="f/11"
 	gphoto2 --set-config /main/imgsettings/iso=800
 fi
 
